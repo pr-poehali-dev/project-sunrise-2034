@@ -19,11 +19,11 @@ export function AboutSection({ scrollToSection }: { scrollToSection?: (index: nu
               }`}
             >
               <h2 className="mb-3 font-sans text-3xl font-light leading-[1.1] tracking-tight text-foreground md:mb-4 md:text-6xl lg:text-7xl">
-                Создаем
+                Печатаем
                 <br />
-                будущее
+                то, что
                 <br />
-                <span className="text-foreground/40">цифровых</span>
+                <span className="text-foreground/40">впечатляет</span>
               </h2>
             </div>
 
@@ -34,10 +34,10 @@ export function AboutSection({ scrollToSection }: { scrollToSection?: (index: nu
               style={{ transitionDelay: "200ms" }}
             >
               <p className="max-w-md text-sm leading-relaxed text-foreground/90 md:text-lg">
-                Мы команда дизайнеров, разработчиков и технологов, которые создают исключительные цифровые продукты.
+                Мы — типография полного цикла. Собственное производство, современное оборудование и команда специалистов, которые держат качество под контролем на каждом этапе.
               </p>
               <p className="max-w-md text-sm leading-relaxed text-foreground/90 md:text-lg">
-                Каждый проект — это возможность исследовать новые решения и раздвигать границы возможного.
+                От визитки до тиража в десятки тысяч экземпляров — печатаем точно в срок и без компромиссов по качеству.
               </p>
             </div>
           </div>
@@ -45,9 +45,9 @@ export function AboutSection({ scrollToSection }: { scrollToSection?: (index: nu
           {/* Right side - Stats with creative layout */}
           <div className="flex flex-col justify-center space-y-6 md:space-y-12">
             {[
-              { value: "150+", label: "Проектов", sublabel: "Реализовано по всему миру", direction: "right" },
-              { value: "8", label: "Лет", sublabel: "Опыта и инноваций", direction: "left" },
-              { value: "12", label: "Наград", sublabel: "Отраслевое признание", direction: "right" },
+              { value: "10М+", label: "Оттисков", sublabel: "Напечатано за год", direction: "right" },
+              { value: "15", label: "Лет", sublabel: "На рынке полиграфии", direction: "left" },
+              { value: "24ч", label: "Срочно", sublabel: "Печать в день обращения", direction: "right" },
             ].map((stat, i) => {
               const getRevealClass = () => {
                 if (!isVisible) {
@@ -84,10 +84,10 @@ export function AboutSection({ scrollToSection }: { scrollToSection?: (index: nu
           style={{ transitionDelay: "750ms" }}
         >
           <MagneticButton size="lg" variant="primary" onClick={() => scrollToSection?.(4)}>
-            Начать проект
+            Рассчитать заказ
           </MagneticButton>
           <MagneticButton size="lg" variant="secondary" onClick={() => scrollToSection?.(1)}>
-            Смотреть работы
+            Смотреть продукцию
           </MagneticButton>
         </div>
       </div>

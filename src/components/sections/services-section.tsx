@@ -17,29 +17,29 @@ export function ServicesSection() {
           <h2 className="mb-2 font-sans text-5xl font-light tracking-tight text-foreground md:text-6xl lg:text-7xl">
             Услуги
           </h2>
-          <p className="font-mono text-sm text-foreground/60 md:text-base">/ Наши компетенции</p>
+          <p className="font-mono text-sm text-foreground/60 md:text-base">/ Полный цикл полиграфии</p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 md:gap-x-16 md:gap-y-12 lg:gap-x-24">
           {[
             {
-              title: "Веб-разработка",
-              description: "Создание современных веб-приложений любой сложности",
+              title: "Дизайн и макет",
+              description: "Разработка макета с нуля и подготовка к печати по вашим материалам",
               direction: "top",
             },
             {
-              title: "UI/UX Дизайн",
-              description: "Проектирование удобных и красивых интерфейсов",
+              title: "Цифровая печать",
+              description: "Быстрая печать малых и средних тиражей с превосходной цветопередачей",
               direction: "right",
             },
             {
-              title: "Мобильные приложения",
-              description: "Кроссплатформенная разработка для iOS и Android",
+              title: "Офсетная печать",
+              description: "Большие тиражи по выгодной цене и со стабильным качеством",
               direction: "left",
             },
             {
-              title: "Консалтинг",
-              description: "Техническая экспертиза и стратегическое планирование",
+              title: "Постпечатная обработка",
+              description: "Ламинация, тиснение, вырубка, биговка и брошюровка под ключ",
               direction: "bottom",
             },
           ].map((service, i) => (

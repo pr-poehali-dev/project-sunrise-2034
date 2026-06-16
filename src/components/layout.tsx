@@ -132,18 +132,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </nav>
 
           {/* Phone + status */}
-          <button
-            onClick={() => navigate("/contacts")}
+          <a
+            href="tel:+79663386505"
+            onClick={(e) => { e.preventDefault(); navigate("/contacts") }}
             className="group flex shrink-0 items-center gap-2 transition-opacity hover:opacity-80"
           >
             <span
-              className={`h-2.5 w-2.5 rounded-full shadow-lg transition-colors ${
-                open ? "bg-green-400 shadow-green-400/50" : "bg-red-400 shadow-red-400/50"
+              className={`h-2.5 w-2.5 animate-pulse rounded-full shadow-lg ${
+                open ? "bg-green-400 shadow-green-400/60" : "bg-red-400 shadow-red-400/60"
               }`}
               title={open ? "Открыто" : "Закрыто"}
             />
-            <span className="font-mono text-sm text-foreground">8 (966) 338-65-05</span>
-          </button>
+            <span className="font-mono text-sm text-foreground group-hover:underline">8 (966) 338-65-05</span>
+          </a>
         </div>
       </header>
 

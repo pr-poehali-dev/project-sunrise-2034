@@ -5,12 +5,19 @@ import { useState, type FormEvent } from "react"
 
 const LAT = 55.723379
 const LNG = 37.398419
-const MAP_URL = `https://maps.google.com/maps?q=${LAT},${LNG}&z=16&output=embed`
+const YANDEX_MAP_URL = `https://yandex.ru/map-widget/v1/?ll=${LNG},${LAT}&z=16&pt=${LNG},${LAT},pm2rdm`
 
 const SCHEDULE = [
-  { days: "Пн–Пт", hours: "09:00–20:00" },
-  { days: "Сб–Вс", hours: "10:00–18:00" },
+  { days: "Пн–Пт", hours: "09:00–20:00", start: 9, end: 20, weekdays: [1,2,3,4,5] },
+  { days: "Сб–Вс", hours: "10:00–18:00", start: 10, end: 18, weekdays: [0,6] },
 ]
+
+function isRowOpen(row: typeof SCHEDULE[0]) {
+  const now = new Date()
+  const day = now.getDay()
+  const time = now.getHours() + now.getMinutes() / 60
+  return row.weekdays.includes(day) && time >= row.start && time < row.end
+}
 
 export default function Contacts() {
   const { ref, isVisible } = useReveal(0.1)
@@ -94,13 +101,20 @@ export default function Contacts() {
                 <Icon name="Clock" className="h-3 w-3 text-foreground/60" />
                 <span className="font-mono text-xs text-foreground/60">График работы</span>
               </div>
-              <div className="space-y-1">
-                {SCHEDULE.map((s) => (
-                  <div key={s.days} className="flex items-center gap-4">
-                    <span className="w-16 font-mono text-sm text-foreground/60">{s.days}</span>
-                    <span className="font-sans text-base text-foreground">{s.hours}</span>
-                  </div>
-                ))}
+              <div className="space-y-2">
+                {SCHEDULE.map((s) => {
+                  const open = isRowOpen(s)
+                  return (
+                    <div key={s.days} className="flex items-center gap-3">
+                      <span className="w-16 font-mono text-sm text-foreground/60">{s.days}</span>
+                      <span className="font-sans text-base text-foreground">{s.hours}</span>
+                      <span
+                        className={`h-2 w-2 rounded-full ${open ? "bg-green-400 shadow-green-400/60 shadow-sm" : "bg-red-400 shadow-red-400/60 shadow-sm"}`}
+                        title={open ? "Сейчас открыто" : "Сейчас закрыто"}
+                      />
+                    </div>
+                  )
+                })}
               </div>
             </div>
 
@@ -112,23 +126,22 @@ export default function Contacts() {
               style={{ transitionDelay: "400ms" }}
             >
               <iframe
-                src={MAP_URL}
+                src={YANDEX_MAP_URL}
                 width="100%"
-                height="220"
-                style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
+                height="240"
+                style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
                 title="Карта: ул. Толбухина, 13к2"
               />
               <div className="border-t border-foreground/10 px-3 py-2">
                 <a
-                  href={`https://maps.google.com/maps?q=${LAT},${LNG}`}
+                  href={`https://yandex.ru/maps/?pt=${LNG},${LAT}&z=16&l=map`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono text-xs text-foreground/50 transition-colors hover:text-foreground/80"
                 >
-                  Открыть в Google Maps →
+                  Открыть в Яндекс Картах →
                 </a>
               </div>
             </div>

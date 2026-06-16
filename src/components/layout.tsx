@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { QuickOrderModal } from "@/components/quick-order-modal"
 import { WorkHoursModal } from "@/components/work-hours-modal"
+import { SearchModal } from "@/components/search-modal"
 
 const NAV_ITEMS = [
   { label: "О нас", path: "/about" },
@@ -34,6 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(isOpen())
   const [showOrder, setShowOrder] = useState(false)
   const [showHours, setShowHours] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -52,6 +54,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const iv = setInterval(() => setOpen(isOpen()), 60000)
     return () => clearInterval(iv)
+  }, [])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") { e.preventDefault(); setShowSearch(true) }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
   }, [])
 
   return (
@@ -183,6 +193,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           {/* Right icons: search + cart */}
           <div className="ml-auto flex items-center gap-4">
             <button
+              onClick={() => setShowSearch(true)}
               className="flex h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition-all hover:bg-foreground/15 hover:text-foreground"
               title="Поиск"
             >
@@ -216,6 +227,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Modals */}
       <QuickOrderModal open={showOrder} onClose={() => setShowOrder(false)} />
       <WorkHoursModal open={showHours} onClose={() => setShowHours(false)} isOpen={open} />
+      <SearchModal open={showSearch} onClose={() => setShowSearch(false)} />
     </main>
   )
 }

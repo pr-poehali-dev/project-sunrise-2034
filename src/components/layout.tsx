@@ -3,34 +3,37 @@ import { CustomCursor } from "@/components/custom-cursor"
 import { GrainOverlay } from "@/components/grain-overlay"
 import { useRef, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
+import { QuickOrderModal } from "@/components/quick-order-modal"
+import { WorkHoursModal } from "@/components/work-hours-modal"
 
 const NAV_ITEMS = [
-  { label: "Главная", path: "/" },
-  { label: "Продукция", path: "/products" },
-  { label: "Услуги", path: "/services" },
   { label: "О нас", path: "/about" },
+  { label: "Новости", path: "/news" },
+  { label: "Доставка и оплата", path: "/delivery" },
+  { label: "Требования к макетам", path: "/layouts" },
+  { label: "Отзывы", path: "/reviews" },
   { label: "Контакты", path: "/contacts" },
 ]
 
-const WORK_START = 9
-const WORK_END_WEEKDAY = 20
-const WORK_END_WEEKEND = 18
+const WORK_START_WD = 9
+const WORK_END_WD = 20
+const WORK_START_WE = 10
+const WORK_END_WE = 18
 
-function isOpen() {
+export function isOpen() {
   const now = new Date()
   const day = now.getDay()
-  const hour = now.getHours()
-  const minute = now.getMinutes()
-  const time = hour + minute / 60
-  if (day === 0) return time >= WORK_START && time < WORK_END_WEEKEND
-  if (day === 6) return time >= WORK_START && time < WORK_END_WEEKEND
-  return time >= WORK_START && time < WORK_END_WEEKDAY
+  const time = now.getHours() + now.getMinutes() / 60
+  if (day === 0 || day === 6) return time >= WORK_START_WE && time < WORK_END_WE
+  return time >= WORK_START_WD && time < WORK_END_WD
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const shaderContainerRef = useRef<HTMLDivElement>(null)
   const [loaded, setLoaded] = useState(false)
   const [open, setOpen] = useState(isOpen())
+  const [showOrder, setShowOrder] = useState(false)
+  const [showHours, setShowHours] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -92,37 +95,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
-      {/* Header — fixed, always on top */}
+      {/* ── HEADER ── */}
       <header
-        className={`fixed left-0 right-0 top-0 z-50 transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+        className={`fixed left-0 right-0 top-0 z-50 bg-black/40 backdrop-blur-md transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
       >
-        <div className="flex items-center justify-between border-b border-foreground/10 bg-black/30 px-6 py-4 backdrop-blur-md md:px-12">
-          {/* Logo */}
-          <button
-            onClick={() => navigate("/")}
-            className="flex shrink-0 items-center gap-2 transition-transform hover:scale-105"
-          >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground/15 backdrop-blur-md transition-all duration-300 hover:bg-foreground/25">
-              <span className="font-sans text-lg font-bold text-foreground">П</span>
-            </div>
-            <span className="font-sans text-lg font-semibold tracking-tight text-foreground">ПринтПро</span>
-          </button>
-
-          {/* Nav — centered */}
-          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
+        {/* Top row: nav + contact info */}
+        <div className="flex items-center justify-between border-b border-foreground/10 px-6 py-2.5 md:px-10">
+          {/* Nav */}
+          <nav className="hidden items-center gap-6 md:flex">
             {NAV_ITEMS.map((item) => {
               const active = location.pathname === item.path
               return (
                 <button
                   key={item.path}
                   onClick={() => navigate(item.path)}
-                  className={`group relative font-sans text-sm font-medium transition-colors ${
-                    active ? "text-foreground" : "text-foreground/80 hover:text-foreground"
+                  className={`group relative font-sans text-xs font-medium transition-colors ${
+                    active ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                   }`}
                 >
                   {item.label}
                   <span
-                    className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${
+                    className={`absolute -bottom-0.5 left-0 h-px bg-foreground transition-all duration-300 ${
                       active ? "w-full" : "w-0 group-hover:w-full"
                     }`}
                   />
@@ -131,29 +124,79 @@ export function Layout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* Phone + status */}
-          <a
-            href="tel:+79663386505"
-            onClick={(e) => { e.preventDefault(); navigate("/contacts") }}
-            className="group flex shrink-0 items-center gap-2 transition-opacity hover:opacity-80"
+          {/* Contact info */}
+          <div className="ml-auto flex items-center gap-5">
+            <a
+              href="mailto:yavadesign@mail.ru"
+              className="font-mono text-xs text-foreground/70 transition-colors hover:text-foreground"
+            >
+              yavadesign@mail.ru
+            </a>
+            <a
+              href="tel:+79663386505"
+              onClick={(e) => { e.preventDefault(); navigate("/contacts") }}
+              className="group flex items-center gap-1.5 transition-opacity hover:opacity-80"
+            >
+              <span
+                className={`h-2 w-2 animate-pulse rounded-full shadow-sm ${
+                  open ? "bg-green-400 shadow-green-400/60" : "bg-red-400 shadow-red-400/60"
+                }`}
+                title={open ? "Открыто" : "Закрыто"}
+              />
+              <span className="font-mono text-xs text-foreground group-hover:underline">8 (966) 338-65-05</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom row: brand + action buttons */}
+        <div className="flex items-center gap-4 px-6 py-4 md:px-10">
+          {/* Brand name — always home */}
+          <button
+            onClick={() => navigate("/")}
+            className="group flex shrink-0 items-baseline gap-2 transition-opacity hover:opacity-80"
+          >
+            <span className="font-sans text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              Ява Принт
+            </span>
+            <span className="hidden font-sans text-sm font-light text-foreground/50 md:inline">
+              / Yava Design
+            </span>
+          </button>
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Quick order button */}
+          <button
+            onClick={() => setShowOrder(true)}
+            className="rounded-lg border border-foreground/30 bg-foreground/10 px-4 py-2 font-sans text-sm font-medium text-foreground backdrop-blur-sm transition-all hover:bg-foreground/20 hover:border-foreground/50"
+          >
+            Быстрый расчёт
+          </button>
+
+          {/* Work hours button */}
+          <button
+            onClick={() => setShowHours(true)}
+            className="flex items-center gap-2 rounded-lg border border-foreground/20 bg-foreground/5 px-4 py-2 font-sans text-sm font-medium text-foreground/80 backdrop-blur-sm transition-all hover:bg-foreground/15 hover:text-foreground"
           >
             <span
-              className={`h-2.5 w-2.5 animate-pulse rounded-full shadow-lg ${
-                open ? "bg-green-400 shadow-green-400/60" : "bg-red-400 shadow-red-400/60"
-              }`}
-              title={open ? "Открыто" : "Закрыто"}
+              className={`h-2 w-2 rounded-full ${open ? "bg-green-400" : "bg-red-400"}`}
             />
-            <span className="font-mono text-sm text-foreground group-hover:underline">8 (966) 338-65-05</span>
-          </a>
+            Режим работы
+          </button>
         </div>
       </header>
 
       {/* Page content */}
       <div
-        className={`relative z-10 pt-[73px] transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+        className={`relative z-10 pt-[113px] transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
       >
         {children}
       </div>
+
+      {/* Modals */}
+      <QuickOrderModal open={showOrder} onClose={() => setShowOrder(false)} />
+      <WorkHoursModal open={showHours} onClose={() => setShowHours(false)} isOpen={open} />
     </main>
   )
 }

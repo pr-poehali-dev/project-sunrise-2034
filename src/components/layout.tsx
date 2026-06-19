@@ -77,29 +77,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
       >
         <Shader className="h-full w-full">
           <Swirl
-            colorA="#1275d8"
-            colorB="#e19136"
-            speed={0.8}
-            detail={0.8}
-            blend={50}
-            coarseX={40}
-            coarseY={40}
-            mediumX={40}
-            mediumY={40}
-            fineX={40}
-            fineY={40}
+            colorA="#00FFFF"
+            colorB="#FF00FF"
+            speed={0.6}
+            detail={0.9}
+            blend={55}
+            coarseX={35}
+            coarseY={35}
+            mediumX={45}
+            mediumY={45}
+            fineX={30}
+            fineY={30}
           />
           <ChromaFlow
-            baseColor="#0066ff"
-            upColor="#0066ff"
-            downColor="#d1d1d1"
-            leftColor="#e19136"
-            rightColor="#e19136"
-            intensity={0.9}
-            radius={1.8}
-            momentum={25}
+            baseColor="#FFFF00"
+            upColor="#00FFFF"
+            downColor="#FF00FF"
+            leftColor="#000000"
+            rightColor="#FFFF00"
+            intensity={0.85}
+            radius={1.6}
+            momentum={20}
             maskType="alpha"
-            opacity={0.97}
+            opacity={0.95}
           />
         </Shader>
         <div className="absolute inset-0 bg-black/20" />
